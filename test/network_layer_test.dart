@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:network_layer/mock/mock_options_provider.dart';
+import 'package:network_layer/mock/server_request.dart';
+import 'package:network_layer/mock/server_response.dart';
 import 'package:network_layer/network_manager.dart';
 import 'package:network_layer/providers/request_provider.dart';
-import 'mock/mock_options_provider.dart';
-import 'mock/server_request.dart';
-import 'mock/server_response.dart';
 
 void main() {
   test('network request test', () async {
