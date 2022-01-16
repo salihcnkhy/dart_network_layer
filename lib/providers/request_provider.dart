@@ -8,14 +8,16 @@ class RequestProvider<ResponseType> {
   dynamic _requestData;
   Mapper<ResponseType> _mapper;
   ContentType _contentType;
-  String baseUrl = "https://hesabinibil.azurewebsites.net/api";
+  String _baseUrl;
   RequestProvider(
-      {required String path,
+      {required String baseUrl,
+      required String path,
       required HttpMethod method,
       required Mapper<ResponseType> mapper,
       dynamic requestData,
       ContentType contentType = ContentType.json})
-      : _path = path,
+      : _baseUrl = baseUrl,
+        _path = path,
         _method = method,
         _mapper = mapper,
         _requestData = requestData,
@@ -23,7 +25,7 @@ class RequestProvider<ResponseType> {
 
   RequestOptions getRequestOption() {
     return RequestOptions(
-        baseUrl: baseUrl,
+        baseUrl: _baseUrl,
         path: _path,
         method: _method.string,
         data: _requestData,
