@@ -1,4 +1,3 @@
-import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 import 'package:network_layer/interfaces/network_options_provider_interface.dart';
 import 'package:network_layer/providers/request_provider.dart';
@@ -17,26 +16,30 @@ class NetworkManager implements NetworkManagerInterface {
   }
 
   @override
-  Future<Result<R>> execute<R>(RequestProvider<R> requestProvider) async {
+  Future<R> execute<R>(RequestProvider<R> requestProvider) async {
     final request = requestProvider.getRequestOption();
     print(request.uri);
-    final response = await _dio.fetch(request);
-    return _getResultFromResponse(response, requestProvider.mapper);
+
+    try {
+      final response = await _dio.fetch(request);
+      return _createGenericFuture(response, requestProvider.mapper);
+    } on DioError catch (e) {
+      return Future.error(NetworkLayerError(message: e.message));
+    }
   }
 
-  Result<R> _getResultFromResponse<R>(
+  Future<R> _createGenericFuture<R>(
       Response<dynamic> response, Mapper<R> mapper) {
-    final data = response.data;
-    if (data == null) {
-      return Result.error(NetworkLayerError(message: "Data is null"));
-    }
     try {
+      final data = response.data;
+      if (data == null) {
+        return Future.error(NetworkLayerError(message: "Data is null"));
+      }
       final map = data as Map<String, dynamic>;
       final serialized = mapper(map);
-      return Result.value(serialized);
+      return Future.value(serialized);
     } catch (e) {
-      return Result.error(
-          NetworkLayerError(message: "Couldn't Convert Data To Map"));
+      return Future.error(e);
     }
   }
 }
