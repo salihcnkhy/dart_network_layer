@@ -34,9 +34,12 @@ void main() {
         mapper: (map) => BaseServerModel.fromMap(map),
         requestData: requestModel);
 
-    networkManager.execute(requestProvider).onError((error, stackTrace) {
+    final data =
+        await networkManager.execute(requestProvider).catchError((error) {
       print(error);
-      throw error!;
+      return BaseServerModel(isSuccess: false);
     });
+
+    expect(false, data.isSuccess);
   });
 }
