@@ -13,11 +13,11 @@ void main() {
   test('network request test', () async {
     final requestModel =
         SignInRequest(email: "test@test.com", password: "123456").toJson();
-    final requestProvider = RequestProvider<BaseServerModel>(
+    final requestProvider = RequestProvider<MockBaseResponse>(
         baseUrl: "https://hesabinibil.azurewebsites.net/api",
         path: "/Auth/SignIn",
         method: HttpMethod.post,
-        mapper: (map) => BaseServerModel.fromMap(map),
+        mapper: (map) => MockBaseResponse.fromMap(map),
         requestData: requestModel);
     final data = await networkManager.execute(requestProvider);
     final s = data;
@@ -27,17 +27,17 @@ void main() {
   test('future error', () async {
     final requestModel =
         SignInRequest(email: "test@test.com", password: "123456").toJson();
-    final requestProvider = RequestProvider<BaseServerModel>(
+    final requestProvider = RequestProvider<MockBaseResponse>(
         baseUrl: "",
         path: "/Auth/SignIn",
         method: HttpMethod.post,
-        mapper: (map) => BaseServerModel.fromMap(map),
+        mapper: (map) => MockBaseResponse.fromMap(map),
         requestData: requestModel);
 
     final data =
         await networkManager.execute(requestProvider).catchError((error) {
       print(error);
-      return BaseServerModel(isSuccess: false);
+      return MockBaseResponse(isSuccess: false);
     });
 
     expect(false, data.isSuccess);
