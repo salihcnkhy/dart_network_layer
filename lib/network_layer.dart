@@ -4,7 +4,7 @@ import 'interfaces/network_manager_interface.dart';
 import 'mock/mock_options_provider.dart';
 import 'network_manager.dart';
 
-class NetworkLayer {
+class MockNetworkProperties {
   static NetworkManagerInterface networkManager =
       NetworkManager(MockOptionsProvider());
 
